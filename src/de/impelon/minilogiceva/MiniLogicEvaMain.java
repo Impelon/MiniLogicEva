@@ -21,7 +21,7 @@ import de.impelon.logic.LogicSymbol;
 
 public class MiniLogicEvaMain {
 	
-	protected static JFrame frame = new JFrame("MiniLogic: minimal logical evaluation");
+	protected static JFrame frame = new JFrame("MiniLogicEva 1.0: minimalistic logic expression evaluation");
 	protected static JTextField formulaInput = new JTextField("(~(r -> q) -> (s <-> ~q)) || ~(r || s)");
 	protected static JButton confirmationButton = new JButton("confirm");
 	protected static LogicParser parser = new LogicParser();
@@ -113,7 +113,7 @@ public class MiniLogicEvaMain {
 		writer.println("  " + String.valueOf(formula.isSatisfiable()).toUpperCase());
 		
 		
-		LogicSymbol[][] rowData = getRowData(formula);
+		LogicSymbol[][] cellData = getCellData(formula);
 		
 		writer.println("");
 		writer.println("------Truth Table-------");
@@ -127,7 +127,7 @@ public class MiniLogicEvaMain {
 			i++;
 		}
 		writer.println("");
-		for (LogicSymbol[] row : rowData) {
+		for (LogicSymbol[] row : cellData) {
 			i = 0;
 			for (LogicSymbol cell : row) {
 				if (i == delimit)
@@ -161,7 +161,7 @@ public class MiniLogicEvaMain {
 		}
 		writer.println("\\\\");
 		
-		for (LogicSymbol[] row : rowData) {
+		for (LogicSymbol[] row : cellData) {
 			for (i = 0; i < row.length; i++) {
 				writer.print(row[i].getLaTeXNotation());
 				if (i < row.length - 1)
@@ -176,14 +176,26 @@ public class MiniLogicEvaMain {
 		System.exit(0);
 	}
 	
-	public static int getColumnLength(LogicFormula formula) {
+	/**
+	 * <p> Returns the number of columns for a truth table. </p>
+	 * 
+	 * @param formula the given LogicFormula to get the number of columns for
+	 * @return the number of columns
+	 */
+	public static int getColumnAmount(LogicFormula formula) {
 		return formula.toString().replace(LogicSymbol.PARENTHESIS_LEFT.getReadableNotation(), "")
 				.replace(LogicSymbol.PARENTHESIS_RIGHT.getReadableNotation(), "").length() + 
 				formula.getLogicVariables().length;
 	}
 	
+	/**
+	 * <p> Returns the column names of the truth table for a readable representation. </p>
+	 * 
+	 * @param formula the given LogicFormula to get the column names for
+	 * @return the column names as an array
+	 */
 	public static String[] getColumnNamesReadable(LogicFormula formula) {
-		String[] columnNames = new String[getColumnLength(formula)];
+		String[] columnNames = new String[getColumnAmount(formula)];
 		int index = 0;
 		
 		for (char variable : formula.getLogicVariables())
@@ -195,8 +207,14 @@ public class MiniLogicEvaMain {
 		return columnNames;
 	}
 	
+	/**
+	 * <p> Returns the column names of the truth table for LaTeX representation. </p>
+	 * 
+	 * @param formula the given LogicFormula to get the column names for
+	 * @return the column names as an array
+	 */
 	public static String[] getColumnNamesLaTeX(LogicFormula formula) {
-		String[] columnNames = new String[getColumnLength(formula)];
+		String[] columnNames = new String[getColumnAmount(formula)];
 		int index = 0;
 		
 		for (char variable : formula.getLogicVariables())
@@ -208,21 +226,27 @@ public class MiniLogicEvaMain {
 		return columnNames;
 	}
 	
-	public static LogicSymbol[][] getRowData(LogicFormula formula) {
+	/**
+	 * <p> Returns the contents of each cell for a truth table as LogicSymbols. </p>
+	 * 
+	 * @param formula the given LogicFormula to get the cells for
+	 * @return an 2D-array containing LogicSymbols for each cell. Each 1D-array contains a row.
+	 */
+	public static LogicSymbol[][] getCellData(LogicFormula formula) {
 		List<List<LogicSymbol>> assignments = formula.getPossibleVariableAssignments();
-		LogicSymbol[][] rowData = new LogicSymbol[assignments.size()][getColumnLength(formula)];
+		LogicSymbol[][] cellData = new LogicSymbol[assignments.size()][getColumnAmount(formula)];
 		
-		for (int n = 0; n < rowData.length; n++) {
+		for (int n = 0; n < cellData.length; n++) {
 			int index = 0;
 			for (LogicSymbol variable : assignments.get(n))
-				rowData[n][index++] = parser.parse(String.valueOf(variable.getSymbol()));
+				cellData[n][index++] = parser.parse(String.valueOf(variable.getSymbol()));
 			
 			for (LogicSymbol result : parser.getPartialResults(formula.getPossibleStatements().get(n).toString())) {
-				rowData[n][index++] = result;
+				cellData[n][index++] = result;
 			}
 		}
 		
-		return rowData;
+		return cellData;
 	}
 
 }
