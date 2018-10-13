@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
  * 
  * <p> Parses a logic statement (logic formula without variables) and returns its result. </p>
  * 
- * @author Boann, Impelon
+ * @author Impelon
  */
 public class LogicParser {
 	
@@ -19,11 +19,32 @@ public class LogicParser {
 	protected String equation;
 	protected LinkedHashMap<Integer, LogicSymbol> partialResults = new LinkedHashMap<Integer, LogicSymbol>();
 	
-	void nextChar() {
-		ch = (++pos < equation.length()) ? equation.charAt(pos) : -1;
+	/**
+	 * <p> Parses and evaluates a String as a logic expression. </p>
+	 * 
+	 * @param equation the logic expression to evaluate
+	 * @return a list of all partial results from the evaluation tree in-order
+	 */
+	public List<LogicSymbol> getPartialResults(String equation) {
+		return this.getPartialResults(equation, true);
 	}
-
-	boolean eat(int charToEat) {
+	
+	/**
+	 * <p> Parses and evaluates a String as a logic expression. </p>
+	 * 
+	 * @param equation the logic expression to evaluate
+	 * @param inordering if true, the list will be in-order according to the given expression, otherwise post-order
+	 * @return a list of all partial results from the evaluation tree
+	 */
+	public List<LogicSymbol> getPartialResults(String equation, boolean inordering) {
+		this.parse(equation);
+		if (inordering)
+			return new ArrayList<LogicSymbol>(this.partialResults.values());
+		return this.partialResults.entrySet().stream()
+				.sorted(Map.Entry.comparingByKey()).map(Map.Entry::getValue).collect(Collectors.toList());
+	}
+	
+	protected boolean eat(int charToEat) {
 		while (ch == ' ')
 			nextChar();
 		if (ch == charToEat) {
@@ -33,18 +54,23 @@ public class LogicParser {
 		return false;
 	}
 	
-	public List<LogicSymbol> getPartialResults(String equation) {
-		return this.getPartialResults(equation, false);
+	protected void nextChar() {
+		ch = (++pos < equation.length()) ? equation.charAt(pos) : -1;
 	}
 	
-	public List<LogicSymbol> getPartialResults(String equation, boolean postordering) {
-		this.parse(equation);
-		if (postordering)
-			return new ArrayList<LogicSymbol>(this.partialResults.values());
-		return this.partialResults.entrySet().stream()
-				.sorted(Map.Entry.comparingByKey()).map(Map.Entry::getValue).collect(Collectors.toList());
-	}
-
+	/**
+	 * <p> Parses and evaluates a String as a logic expression. </p>
+	 * 
+	 * <p> Grammar: </p>
+	 * <p>
+	 * expression = term | expression '{' term | expression '}' term <br/>
+	 * term = factor | term '+' factor | term '*' factor | term '=' factor <br/>
+	 * factor = '-' factor | '(' expression ')' | boolean 
+	 * boolean = 't' | 'f'
+	 * </p>
+	 * @param equation the logic expression to evaluate
+	 * @return either LogicSymbol.TRUE or LogicSymbol.FALSE 
+	 */
 	public LogicSymbol parse(String equation) {
 		this.partialResults.clear();
 		this.pos = -1;
@@ -56,11 +82,7 @@ public class LogicParser {
 		return x;
 	}
 
-	// Grammar:
-	// expression = term | expression '{' term | expression '}' term
-	// term = factor | term '+' factor | term '*' factor | term '=' factor
-	// factor = '-' factor | '(' expression ')' | boolean
-
+	
 	protected LogicSymbol parseExpression() {
 		LogicSymbol x = parseTerm();
 		if (eat(LogicSymbol.IMPLICATION_LEFT.getSymbol())) {

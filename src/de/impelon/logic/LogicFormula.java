@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * <p> Class for representing logic expressions. </p>
+ * 
+ * @author Impelon
+ */
 public class LogicFormula {
 	
 	protected String formula;
@@ -133,6 +138,11 @@ public class LogicFormula {
 		return true;	
 	}
 	
+	/**
+	 * <p> Evaluates the LogicFormula and returns the result as a LogicSymbol. </p>
+	 * 
+	 * @return either LogicSymbol.TRUE or LogicSymbol.FALSE or null if the LogicFormula could not be evaluated
+	 */
 	public LogicSymbol evaluate() {
 		if (this.result == null) {
 			if (this.getLogicVariables().length != 0)
@@ -142,16 +152,22 @@ public class LogicFormula {
 		return this.result;
 	}
 	
+	/**
+	 * <p> Evaluates the LogicFormula and returns the result as a boolean. </p>
+	 * 
+	 * @return whether the expression evaluates to true
+	 */
 	public boolean evaluateBoolean() {
 		return this.evaluate().equals(LogicSymbol.TRUE);
 	}
 	
 	/**
-	 * Calculates and returns the cartesian product from the given lists
+	 * <p> Calculates and returns the cartesian product from the given lists. </p>
 	 * 
-	 * Modified Version of: https://stackoverflow.com/a/9496234
+	 * <p> Modified Version of: https://stackoverflow.com/a/9496234 </p>
 	 * 
 	 * @param lists list of multiple lists of elements to build a Cartesian product from
+	 * @author original author: Philipp Meister (https://stackoverflow.com/users/1239812/philipp-meister)
 	 * @return the cartesian product
 	 */
 	public static <T> List<List<T>> getCartesianProduct(List<List<T>> lists) {
