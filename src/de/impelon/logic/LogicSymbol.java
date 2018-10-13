@@ -30,14 +30,29 @@ public enum LogicSymbol {
 		this.latexNotation = latexNotation;
 	}
 	
+	/**
+	 * <p> Returns a single character representing the LogicSymbol. </p>
+	 * 
+	 * @return the symbol representation
+	 */
 	public char getSymbol() {
 		return this.symbol;
 	}
 	
+	/**
+	 * <p> Returns a String representing the LogicSymbol in a readable fashion. </p>
+	 * 
+	 * @return the String representation
+	 */
 	public String getReadableNotation() {
 		return this.readableNotation;
 	}
 	
+	/**
+	 * <p> Returns a String representing the LogicSymbol in LaTeX. </p>
+	 * 
+	 * @return the LaTeX representation
+	 */
 	public String getLaTeXNotation() {
 		return this.latexNotation;
 	}
