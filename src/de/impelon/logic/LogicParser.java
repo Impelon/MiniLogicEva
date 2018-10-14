@@ -43,7 +43,7 @@ public class LogicParser {
 		return this.partialResults.entrySet().stream()
 				.sorted(Map.Entry.comparingByKey()).map(Map.Entry::getValue).collect(Collectors.toList());
 	}
-	
+		
 	protected boolean eat(int charToEat) {
 		while (ch == ' ')
 			nextChar();
@@ -72,6 +72,9 @@ public class LogicParser {
 	 * @return either LogicSymbol.TRUE or LogicSymbol.FALSE 
 	 */
 	public LogicSymbol parse(String equation) {
+		if (this.equation.equals(equation))
+			return (LogicSymbol) this.partialResults.values().toArray()[this.partialResults.size() - 1];
+		
 		this.partialResults.clear();
 		this.pos = -1;
 		this.equation = equation;
@@ -81,7 +84,6 @@ public class LogicParser {
 			throw new RuntimeException("Unexpected: '" + (char) ch + "' at position: " + this.pos);
 		return x;
 	}
-
 	
 	protected LogicSymbol parseExpression() {
 		LogicSymbol x = parseTerm();
