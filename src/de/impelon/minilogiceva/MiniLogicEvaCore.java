@@ -27,22 +27,22 @@ public class MiniLogicEvaCore {
 			formula.isUniversal();
 		} catch (Exception ex) {
 			writer.println("An exception occured. Probably the given expression is not a valid logical expression!");
-			writer.println("");
+			writer.println();
 			writer.println("========================");
-			writer.println("");
+			writer.println();
 			ex.printStackTrace(writer);
 			writer.close();
 			return;
 		}
-		writer.println("");
+		writer.println();
 		writer.println("-------Notations--------");
-		writer.println("");
+		writer.println();
 		writer.println("Compact notation (internal): " + formula.toString());
 		writer.println("Readable notation: " + formula.toReadableNotation());
 		writer.println("LaTeX notation: " + formula.toLaTeXNotation());
-		writer.println("");
+		writer.println();
 		writer.println("-------Properties-------");
-		writer.println("");
+		writer.println();
 		writer.println("Is statement (aka. has no variables): ");
 		writer.println("  " + String.valueOf(formula.isStatement()).toUpperCase());
 		writer.println("Is pattern (aka. has variables): ");
@@ -63,9 +63,9 @@ public class MiniLogicEvaCore {
 		
 		LogicSymbol[][] cellData = getCellData(formula);
 		
-		writer.println("");
+		writer.println();
 		writer.println("------Truth Table-------");
-		writer.println("");
+		writer.println();
 		int i = 0;
 		int delimit = formula.getLogicVariables().length;
 		for(String s : getColumnNamesReadable(formula)) {
@@ -74,7 +74,7 @@ public class MiniLogicEvaCore {
 			writer.append(s + "\t");
 			i++;
 		}
-		writer.println("");
+		writer.println();
 		for (LogicSymbol[] row : cellData) {
 			i = 0;
 			for (LogicSymbol cell : row) {
@@ -83,13 +83,13 @@ public class MiniLogicEvaCore {
 				writer.print(cell.getSymbol() + "\t");
 				i++;
 			}
-			writer.println("");
+			writer.println();
 		}
 		
 		
-		writer.println("");
+		writer.println();
 		writer.println("---LaTeX Truth Table----");
-		writer.println("");
+		writer.println();
 		
 		writer.append("\\begin{array}{");
 		

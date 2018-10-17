@@ -13,14 +13,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import de.impelon.logic.LogicParser;
-
 public class MiniLogicEvaMain {
 	
 	protected static JFrame frame = new JFrame("MiniLogicEva 1.0: minimalistic logic expression evaluation");
 	protected static JTextField formulaInput = new JTextField("(~(r -> q) -> (s <-> ~q)) || ~(r || s)");
 	protected static JButton confirmationButton = new JButton("confirm");
-	protected static LogicParser parser = new LogicParser();
 
 	public static void main(String[] args) {
 		JPanel panel = new JPanel();
@@ -38,8 +35,8 @@ public class MiniLogicEvaMain {
 				+ "<p>Use '->' to indicate an implication.</p>"
 				+ "<p>Use '<-' to indicate a reverse implication.</p>"
 				+ "<p>Use '<->' to indicate a biimplication or logical equivalence.</p>"
-				+ "<p>Use 'T' to indicate Verum.</p>"
-				+ "<p>Use 'F' to indicate Falsum.</p>"
+				+ "<p>Use 'T' or 't' to indicate Verum.</p>"
+				+ "<p>Use 'F' or 'f' to indicate Falsum.</p>"
 				+ "</HTML>");
 		formulaInput.setFont(new Font(Font.MONOSPACED, Font.BOLD, 16));
 		panel.add(new JLabel("Result can be found in 'output.txt' after confirmation"));
@@ -62,8 +59,8 @@ public class MiniLogicEvaMain {
 		PrintWriter writer;
 		try {
 			writer = new PrintWriter("output.txt", "UTF-8");
-		} catch (FileNotFoundException | UnsupportedEncodingException e) {
-			e.printStackTrace();
+		} catch (FileNotFoundException | UnsupportedEncodingException ex) {
+			ex.printStackTrace();
 			System.exit(0);
 			return;
 		}
