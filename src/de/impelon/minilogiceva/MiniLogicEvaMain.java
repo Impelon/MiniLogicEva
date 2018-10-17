@@ -15,7 +15,7 @@ import javax.swing.JTextField;
 
 public class MiniLogicEvaMain {
 	
-	protected static JFrame frame = new JFrame("MiniLogicEva 1.0: minimalistic logic expression evaluation");
+	protected static JFrame frame = new JFrame("MiniLogicEva 1.1: minimalistic logic expression evaluation");
 	protected static JTextField formulaInput = new JTextField("(~(r -> q) -> (s <-> ~q)) || ~(r || s)");
 	protected static JButton confirmationButton = new JButton("confirm");
 
