@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class LogicParser {
 	
 	protected int pos, ch;
-	protected String equation;
+	protected String equation = null;
 	protected LinkedHashMap<Integer, LogicSymbol> partialResults = new LinkedHashMap<Integer, LogicSymbol>();
 	
 	/**
@@ -72,7 +72,7 @@ public class LogicParser {
 	 * @return either LogicSymbol.TRUE or LogicSymbol.FALSE 
 	 */
 	public LogicSymbol parse(String equation) {
-		if (this.equation.equals(equation))
+		if (this.equation != null && this.equation.equals(equation))
 			return (LogicSymbol) this.partialResults.values().toArray()[this.partialResults.size() - 1];
 		
 		this.partialResults.clear();
@@ -131,8 +131,9 @@ public class LogicParser {
 		if (eat(LogicSymbol.PARENTHESIS_LEFT.getSymbol())) { // parenthesis
 			x = parseExpression();
 			eat(LogicSymbol.PARENTHESIS_RIGHT.getSymbol());
-		} else if (ch == LogicSymbol.FALSUM.getSymbol() || ch == LogicSymbol.VERUM.getSymbol()) {  	// booleans
-			x = (ch == LogicSymbol.VERUM.getSymbol() ? LogicSymbol.TRUE : LogicSymbol.FALSE);
+		} else if (ch == LogicSymbol.FALSUM.getSymbol() || ch == LogicSymbol.FALSE.getSymbol() || 
+				ch == LogicSymbol.VERUM.getSymbol() || ch == LogicSymbol.TRUE.getSymbol()) {  	// booleans
+			x = ((ch == LogicSymbol.VERUM.getSymbol() || ch == LogicSymbol.TRUE.getSymbol()) ? LogicSymbol.TRUE : LogicSymbol.FALSE);
 			nextChar();
 			this.partialResults.put(this.pos, x);
 		} else

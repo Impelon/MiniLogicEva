@@ -23,8 +23,9 @@ public class LogicFormula {
 	protected void normalize() {
 		for (LogicSymbol symbol : LogicSymbol.values())
 			this.formula = this.formula.replace(symbol.getReadableNotation(), String.valueOf(symbol.getSymbol()))
-			.replace(symbol.getLaTeXNotation(), String.valueOf(symbol.getSymbol()));
-		this.formula = this.formula.replace(" ", "");
+				.replace(symbol.getLaTeXNotation(), String.valueOf(symbol.getSymbol()));
+		this.formula = this.formula.replace(" ", "").replace(LogicSymbol.FALSE.getSymbol(), LogicSymbol.FALSUM.getSymbol())
+				.replace(LogicSymbol.TRUE.getSymbol(), LogicSymbol.VERUM.getSymbol());
 	}
 	
 	@Override
