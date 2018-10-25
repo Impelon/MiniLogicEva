@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import javax.swing.BoxLayout;
@@ -15,11 +16,11 @@ import javax.swing.JTextField;
 
 public class MiniLogicEvaMain {
 	
-	protected static JFrame frame = new JFrame("MiniLogicEva 1.1: minimalistic logic expression evaluation");
+	protected static JFrame frame = new JFrame("MiniLogicEva " + MiniLogicEvaCore.VERSION + ": minimalistic logic expression evaluation");
 	protected static JTextField formulaInput = new JTextField("(~(r -> q) -> (s <-> ~q)) || ~(r || s)");
 	protected static JButton confirmationButton = new JButton("confirm");
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 		

@@ -1,8 +1,11 @@
 package de.impelon.minilogiceva;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import de.impelon.logic.LogicFormula;
 import de.impelon.logic.LogicParser;
@@ -16,7 +19,9 @@ import de.impelon.logic.LogicSymbol;
 
 public class MiniLogicEvaCore {
 	
-	protected static LogicParser parser = new LogicParser();
+	protected static LogicParser parser = new LogicParser();	
+	public final static String VERSION = new BufferedReader(new InputStreamReader(MiniLogicEvaCore.class.getResourceAsStream("/info.txt"))).
+			lines().filter(x -> x.startsWith("version: ")).collect(Collectors.toList()).get(0).replace("version:", "").trim();
 	
 	public static void printOutput(String input, Writer originalwriter) {
 		PrintWriter writer = new PrintWriter(originalwriter);
