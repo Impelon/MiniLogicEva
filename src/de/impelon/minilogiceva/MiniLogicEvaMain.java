@@ -4,7 +4,6 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import javax.swing.BoxLayout;
@@ -20,7 +19,7 @@ public class MiniLogicEvaMain {
 	protected static JTextField formulaInput = new JTextField("(~(r -> q) -> (s <-> ~q)) || ~(r || s)");
 	protected static JButton confirmationButton = new JButton("confirm");
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 		
