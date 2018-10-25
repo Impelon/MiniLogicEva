@@ -15,33 +15,67 @@ public class MiniLogicEvaCLIMain {
 		
 		PrintWriter writer = null;
 		String formula = null;
+		boolean skipHeaders = false;
+		boolean skipNotations = false;
+		boolean skipProperties = false;
+		boolean skipReadableTable = false;
+		boolean skipLaTeXTable = false;
 		
 		for (String arg : args) {
-			if (arg.equals("--help") || arg.equals("-h")) {
-				System.out.println("MiniLogicEva accepts logic expressions as arguments and evaluates them.");
-				System.out.println("To pass an expression as argument surround it with quotation marks e.g. 'x -> y'.");
-				System.out.println();
-				System.out.println("Syntax:");
-				System.out.println("Single characters can be used as placeholders for variables.");
-				System.out.println("Parantheses can be used inside expressions.");
-				System.out.println("Use '+' or '&&' to indicate an AND-operator.");
-				System.out.println("Use '*' or '||' to indicate an OR-operator.");
-				System.out.println("Use '-' or '~' to indicaqte an NOT-operator.");
-				System.out.println("Use '->' to indicate an implication.");
-				System.out.println("Use '<-' to indicate a reverse implication.");
-				System.out.println("Use '<->' to indicate a biimplication or logical equivalence.");
-				System.out.println("Use 'T' or 't' to indicate Verum.");
-				System.out.println("Use 'F' or 'f' to indicate Falsum.");
-				System.out.println();
-				System.out.println("Options:");
-				System.out.println("--help, -h \t provides a help message.");
-				System.out.println("--print, -p \t prints any output to the standard output instead of writing to 'output.txt'.");
-				return;
-			} else if (arg.equals("--print") || arg.equals("-p")) {
-				writer = new PrintWriter(System.out);
-			} else {
-				formula = arg;
-			}
+			switch(arg) {
+				case "--help":
+				case "-h":
+					System.out.println("MiniLogicEva accepts logic expressions as arguments and evaluates them.");
+					System.out.println("To pass an expression as argument surround it with quotation marks e.g. 'x -> y'.");
+					System.out.println();
+					System.out.println("Syntax:");
+					System.out.println("Single characters can be used as placeholders for variables.");
+					System.out.println("Parantheses can be used inside expressions.");
+					System.out.println("Use '+' or '&&' to indicate an AND-operator.");
+					System.out.println("Use '*' or '||' to indicate an OR-operator.");
+					System.out.println("Use '-' or '~' to indicaqte an NOT-operator.");
+					System.out.println("Use '->' to indicate an implication.");
+					System.out.println("Use '<-' to indicate a reverse implication.");
+					System.out.println("Use '<->' to indicate a biimplication or logical equivalence.");
+					System.out.println("Use 'T' or 't' to indicate Verum.");
+					System.out.println("Use 'F' or 'f' to indicate Falsum.");
+					System.out.println();
+					System.out.println("Options:");
+					System.out.println("--help, -h \t\t provides a help message.");
+					System.out.println("--version, -v \t\t prints this implementation's version.");
+					System.out.println("--print, -p \t\t prints any output to the standard output instead of writing to 'output.txt'.");
+					System.out.println("--skipHeaders \t\t skips headers when printing.");
+					System.out.println("--skipNotations \t skips notations when printing.");
+					System.out.println("--skipProperties \t skips properties when printing.");
+					System.out.println("--skipReadableTable \t skips the readable truth table when printing.");
+					System.out.println("--skipLaTeXTable \t skips the LaTeX truth table when printing.");
+					return;
+				case "--version":
+				case "-v":
+					System.out.println("MiniLogicEvaCLI - version: " + MiniLogicEvaCore.VERSION);
+					return;
+				case "--print":
+				case "-p":
+					writer = new PrintWriter(System.out);
+					break;
+				case "--skipHeaders":
+					skipHeaders = true;
+					break;
+				case "--skipNotations":
+					skipNotations = true;
+					break;
+				case "--skipProperties":
+					skipProperties = true;
+					break;
+				case "--skipReadableTable":
+					skipReadableTable = true;
+					break;
+				case "--skipLaTeXTable":
+					skipLaTeXTable = true;
+					break;
+				default:
+					formula = arg;
+			}				
 		}
 		
 		if (formula == null) {
@@ -58,7 +92,7 @@ public class MiniLogicEvaCLIMain {
 			}
 		}
 		
-		MiniLogicEvaCore.printOutput(formula, writer);
+		MiniLogicEvaCore.printOutput(formula, writer, skipHeaders, skipNotations, skipProperties, skipReadableTable, skipLaTeXTable);
 		
 		writer.close();
 	}

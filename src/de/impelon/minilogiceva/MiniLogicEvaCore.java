@@ -20,14 +20,43 @@ import de.impelon.logic.LogicSymbol;
 public class MiniLogicEvaCore {
 	
 	protected static LogicParser parser = new LogicParser();	
-	public final static String VERSION = new BufferedReader(new InputStreamReader(MiniLogicEvaCore.class.getResourceAsStream("/info.txt"))).
-			lines().filter(x -> x.startsWith("version: ")).collect(Collectors.toList()).get(0).replace("version:", "").trim();
+	public final static String VERSION = new BufferedReader(new InputStreamReader(MiniLogicEvaCore.class.getResourceAsStream("/info.txt")))
+			.lines().filter(x -> x.startsWith("version: ")).collect(Collectors.toList()).get(0).replace("version:", "").trim();
 	
+	/**
+	 * <p> Prints all information about the given input to the given Writer. </p>
+	 * <p> The input will be interpreted as a LogicFormula. Otherwise this prints a stacktrace to the Writer. </p>
+	 * <p> This will <b><i>not</i></b> close the writer! </p>
+	 * 
+	 * @param input String with logic expression to output information about
+	 * @param originalwriter Writer to write to
+	 */
 	public static void printOutput(String input, Writer originalwriter) {
+		printOutput(input, originalwriter, false, false, false, false, false);
+	}
+	
+	/**
+	 * <p> Prints information about the given input to the given Writer. </p>
+	 * <p> The input will be interpreted as a LogicFormula. Otherwise this prints a stacktrace to the Writer. </p>
+	 * <p> This will <b><i>not</i></b> close the writer! </p>
+	 * 
+	 * @param input String with logic expression to output information about
+	 * @param originalwriter Writer to write to
+	 * @param skipHeaders whether to skip headers when printing
+	 * @param skipNotations whether to skip information about notations when printing
+	 * @param skipProperties whether to skip properties when printing
+	 * @param skipReadableTable whether to skip the readable truth table when printing
+	 * @param skipLaTeXTable whether to skip LaTeX truth table when printing
+	 */
+	public static void printOutput(String input, Writer originalwriter, 
+			boolean skipHeaders, boolean skipNotations, boolean skipProperties, boolean skipReadableTable, boolean skipLaTeXTable) {
 		PrintWriter writer = new PrintWriter(originalwriter);
 		LogicFormula formula = new LogicFormula(input);
-		writer.println("Given input:");
-		writer.println(input);
+		if (!skipHeaders) {
+			writer.println("Given input:");
+			writer.println(input);	
+		}
+		
 		try {
 			formula.isUniversal();
 		} catch (Exception ex) {
@@ -39,38 +68,69 @@ public class MiniLogicEvaCore {
 			writer.close();
 			return;
 		}
-		writer.println();
-		writer.println("-------Notations--------");
-		writer.println();
-		writer.println("Compact notation (internal): " + formula.toString());
-		writer.println("Readable notation: " + formula.toReadableNotation());
-		writer.println("LaTeX notation: " + formula.toLaTeXNotation());
-		writer.println();
-		writer.println("-------Properties-------");
-		writer.println();
-		writer.println("Is statement (aka. has no variables): ");
-		writer.println("  " + String.valueOf(formula.isStatement()).toUpperCase());
-		writer.println("Is pattern (aka. has variables): ");
-		writer.println("  " + String.valueOf(formula.isPattern()).toUpperCase());
-		writer.println("Is atomic (aka. single operand): ");
-		writer.println("  " + String.valueOf(formula.isAtomic()).toUpperCase());
-		writer.println("Is compound (aka. multiple operands): ");
-		writer.println("  " + String.valueOf(formula.isCompound()).toUpperCase());
-		writer.println("Is trivial (aka. one operator and its operands): ");
-		writer.println("  " + String.valueOf(formula.isTrivial()).toUpperCase());
-		writer.println("Is universal (aka. true regardless of chosen variables): ");
-		writer.println("  " + String.valueOf(formula.isUniversal()).toUpperCase());
-		writer.println("Is contradictory (aka. false regardless of chosen variables): ");
-		writer.println("  " + String.valueOf(formula.isContradictory()).toUpperCase());
-		writer.println("Is satisfiable (aka. there is at least a choice of variables so that the expression evaluates to true): ");
-		writer.println("  " + String.valueOf(formula.isSatisfiable()).toUpperCase());
 		
+		if (!skipNotations) {
+			if (!skipHeaders) {
+				writer.println();
+				writer.println("-------Notations--------");
+				writer.println();	
+			}
+			writer.println("Compact notation (internal): " + formula.toString());
+			writer.println("Readable notation: " + formula.toReadableNotation());
+			writer.println("LaTeX notation: " + formula.toLaTeXNotation());
+		}
 		
+		if (!skipProperties) {
+			if (!skipHeaders) {
+				writer.println();
+				writer.println("-------Properties-------");
+				writer.println();
+			}
+			writer.println("Is statement (aka. has no variables): ");
+			writer.println("  " + String.valueOf(formula.isStatement()).toUpperCase());
+			writer.println("Is pattern (aka. has variables): ");
+			writer.println("  " + String.valueOf(formula.isPattern()).toUpperCase());
+			writer.println("Is atomic (aka. single operand): ");
+			writer.println("  " + String.valueOf(formula.isAtomic()).toUpperCase());
+			writer.println("Is compound (aka. multiple operands): ");
+			writer.println("  " + String.valueOf(formula.isCompound()).toUpperCase());
+			writer.println("Is trivial (aka. one operator and its operands): ");
+			writer.println("  " + String.valueOf(formula.isTrivial()).toUpperCase());
+			writer.println("Is universal (aka. true regardless of chosen variables): ");
+			writer.println("  " + String.valueOf(formula.isUniversal()).toUpperCase());
+			writer.println("Is contradictory (aka. false regardless of chosen variables): ");
+			writer.println("  " + String.valueOf(formula.isContradictory()).toUpperCase());
+			writer.println("Is satisfiable (aka. there is at least a choice of variables so that the expression evaluates to true): ");
+			writer.println("  " + String.valueOf(formula.isSatisfiable()).toUpperCase());
+		}
+		
+		if (!skipReadableTable) {
+			if (!skipHeaders) {
+				writer.println();
+				writer.println("------Truth Table-------");
+				writer.println();
+			}
+			printReadableTruthTable(formula, writer);
+		}
+		
+		if (!skipLaTeXTable) {
+			if (!skipHeaders) {
+				writer.println();
+				writer.println("---LaTeX Truth Table----");
+				writer.println();
+			}
+			printLaTeXTruthTable(formula, writer);
+		}		
+	}
+	
+	/**
+	 * <p> Prints the readable truth table of the given LogicFormula to the given PrintWriter. </p>
+	 * 
+	 * @param formula LogicFormula used to create the truth table
+	 * @param writer PrintWriter to write to
+	 */
+	public static void printReadableTruthTable(LogicFormula formula, PrintWriter writer) {
 		LogicSymbol[][] cellData = getCellData(formula);
-		
-		writer.println();
-		writer.println("------Truth Table-------");
-		writer.println();
 		int i = 0;
 		int delimit = formula.getLogicVariables().length;
 		for(String s : getColumnNamesReadable(formula)) {
@@ -90,15 +150,21 @@ public class MiniLogicEvaCore {
 			}
 			writer.println();
 		}
-		
-		
-		writer.println();
-		writer.println("---LaTeX Truth Table----");
-		writer.println();
-		
+	}
+	
+	/**
+	 * <p> Prints the LaTeX truth table of the given LogicFormula to the given PrintWriter. </p>
+	 * 
+	 * @param formula LogicFormula used to create the truth table
+	 * @param writer PrintWriter to write to
+	 */
+	public static void printLaTeXTruthTable(LogicFormula formula, PrintWriter writer) {
 		writer.append("\\begin{array}{");
 		
 		String[] latexColunNames = getColumnNamesLaTeX(formula);
+		LogicSymbol[][] cellData = getCellData(formula);
+		int delimit = formula.getLogicVariables().length;
+		int i = 0;
 		
 		for (i = 0; i < latexColunNames.length; i++) {
 			if (i == delimit)
@@ -124,8 +190,6 @@ public class MiniLogicEvaCore {
 		}
 		
 		writer.println("\\end{array}");
-		
-		writer.close();
 	}
 	
 	/**
