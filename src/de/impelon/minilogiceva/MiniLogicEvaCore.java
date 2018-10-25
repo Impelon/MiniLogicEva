@@ -52,7 +52,7 @@ public class MiniLogicEvaCore {
 		writer.println("  " + String.valueOf(formula.isStatement()).toUpperCase());
 		writer.println("Is pattern (aka. has variables): ");
 		writer.println("  " + String.valueOf(formula.isPattern()).toUpperCase());
-		writer.println("Is atomar (aka. single operand): ");
+		writer.println("Is atomic (aka. single operand): ");
 		writer.println("  " + String.valueOf(formula.isAtomic()).toUpperCase());
 		writer.println("Is compound (aka. multiple operands): ");
 		writer.println("  " + String.valueOf(formula.isCompound()).toUpperCase());
