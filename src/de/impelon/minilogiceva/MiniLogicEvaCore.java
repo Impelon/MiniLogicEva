@@ -53,7 +53,7 @@ public class MiniLogicEvaCore {
 		writer.println("Is pattern (aka. has variables): ");
 		writer.println("  " + String.valueOf(formula.isPattern()).toUpperCase());
 		writer.println("Is atomar (aka. single operand): ");
-		writer.println("  " + String.valueOf(formula.isAtomar()).toUpperCase());
+		writer.println("  " + String.valueOf(formula.isAtomic()).toUpperCase());
 		writer.println("Is compound (aka. multiple operands): ");
 		writer.println("  " + String.valueOf(formula.isCompound()).toUpperCase());
 		writer.println("Is trivial (aka. one operator and its operands): ");
@@ -62,7 +62,7 @@ public class MiniLogicEvaCore {
 		writer.println("  " + String.valueOf(formula.isUniversal()).toUpperCase());
 		writer.println("Is contradictory (aka. false regardless of chosen variables): ");
 		writer.println("  " + String.valueOf(formula.isContradictory()).toUpperCase());
-		writer.println("Is satisfiable (aka. there is atleast a choice of variables so that the expression evaluates to true): ");
+		writer.println("Is satisfiable (aka. there is at least a choice of variables so that the expression evaluates to true): ");
 		writer.println("  " + String.valueOf(formula.isSatisfiable()).toUpperCase());
 		
 		
