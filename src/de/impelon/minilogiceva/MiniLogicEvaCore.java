@@ -32,7 +32,7 @@ public class MiniLogicEvaCore {
 	 * @param originalwriter Writer to write to
 	 */
 	public static void printOutput(String input, Writer originalwriter) {
-		printOutput(input, originalwriter, false, false, false, false, false);
+		printOutput(input, originalwriter, false, false, false, false, false, false);
 	}
 	
 	/**
@@ -47,9 +47,10 @@ public class MiniLogicEvaCore {
 	 * @param skipProperties whether to skip properties when printing
 	 * @param skipReadableTable whether to skip the readable truth table when printing
 	 * @param skipLaTeXTable whether to skip LaTeX truth table when printing
+	 * @param simpleTable whether to put only the end result of each row into the table
 	 */
 	public static void printOutput(String input, Writer originalwriter, 
-			boolean skipHeaders, boolean skipNotations, boolean skipProperties, boolean skipReadableTable, boolean skipLaTeXTable) {
+			boolean skipHeaders, boolean skipNotations, boolean skipProperties, boolean skipReadableTable, boolean skipLaTeXTable, boolean simpleTables) {
 		PrintWriter writer = new PrintWriter(originalwriter);
 		LogicFormula formula = new LogicFormula(input);
 		if (!skipHeaders) {
@@ -110,7 +111,7 @@ public class MiniLogicEvaCore {
 				writer.println("------Truth Table-------");
 				writer.println();
 			}
-			printReadableTruthTable(formula, writer);
+			printReadableTruthTable(formula, writer, simpleTables);
 		}
 		
 		if (!skipLaTeXTable) {
@@ -119,7 +120,7 @@ public class MiniLogicEvaCore {
 				writer.println("---LaTeX Truth Table----");
 				writer.println();
 			}
-			printLaTeXTruthTable(formula, writer);
+			printLaTeXTruthTable(formula, writer, simpleTables);
 		}		
 	}
 	
@@ -127,10 +128,11 @@ public class MiniLogicEvaCore {
 	 * <p> Prints the readable truth table of the given LogicFormula to the given PrintWriter. </p>
 	 * 
 	 * @param formula LogicFormula used to create the truth table
+	 * @param simpleTable whether to put only the end result of each row into the table
 	 * @param writer PrintWriter to write to
 	 */
-	public static void printReadableTruthTable(LogicFormula formula, PrintWriter writer) {
-		LogicSymbol[][] cellData = getCellData(formula);
+	public static void printReadableTruthTable(LogicFormula formula, PrintWriter writer, boolean simpleTable) {
+		LogicSymbol[][] cellData = getCellData(formula, simpleTable);
 		int i = 0;
 		int delimit = formula.getLogicVariables().length;
 		for(String s : getColumnNamesReadable(formula)) {
@@ -156,13 +158,14 @@ public class MiniLogicEvaCore {
 	 * <p> Prints the LaTeX truth table of the given LogicFormula to the given PrintWriter. </p>
 	 * 
 	 * @param formula LogicFormula used to create the truth table
+	 * @param simpleTable whether to put only the end result of each row into the table
 	 * @param writer PrintWriter to write to
 	 */
-	public static void printLaTeXTruthTable(LogicFormula formula, PrintWriter writer) {
+	public static void printLaTeXTruthTable(LogicFormula formula, PrintWriter writer, boolean simpleTable) {
 		writer.append("\\begin{array}{");
 		
 		String[] latexColunNames = getColumnNamesLaTeX(formula);
-		LogicSymbol[][] cellData = getCellData(formula);
+		LogicSymbol[][] cellData = getCellData(formula, simpleTable);
 		int delimit = formula.getLogicVariables().length;
 		int i = 0;
 		
@@ -246,9 +249,10 @@ public class MiniLogicEvaCore {
 	 * <p> Returns the contents of each cell for a truth table as LogicSymbols. </p>
 	 * 
 	 * @param formula the given LogicFormula to get the cells for
+	 * @param simpleData whether to put only the end result of each row into the data
 	 * @return an 2D-array containing LogicSymbols for each cell. Each 1D-array contains a row.
 	 */
-	public static LogicSymbol[][] getCellData(LogicFormula formula) {
+	public static LogicSymbol[][] getCellData(LogicFormula formula, boolean simpleData) {
 		List<List<LogicSymbol>> assignments = formula.getPossibleVariableAssignments();
 		LogicSymbol[][] cellData = new LogicSymbol[assignments.size()][getColumnAmount(formula)];
 		
@@ -257,9 +261,14 @@ public class MiniLogicEvaCore {
 			for (LogicSymbol variable : assignments.get(n))
 				cellData[n][index++] = parser.parse(String.valueOf(variable.getSymbol()));
 			
-			for (LogicSymbol result : parser.getPartialResults(formula.getPossibleStatements().get(n).toString())) {
-				cellData[n][index++] = result;
+			if (simpleData) {
+				cellData[n][index++] = formula.getPossibleStatements().get(n).evaluate();
+			} else {
+				for (LogicSymbol result : parser.getPartialResults(formula.getPossibleStatements().get(n).toString())) {
+					cellData[n][index++] = result;
+				}
 			}
+			
 		}
 		
 		return cellData;

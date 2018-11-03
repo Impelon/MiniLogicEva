@@ -20,6 +20,7 @@ public class MiniLogicEvaCLIMain {
 		boolean skipProperties = false;
 		boolean skipReadableTable = false;
 		boolean skipLaTeXTable = false;
+		boolean simpleTables = false;
 		
 		for (String arg : args) {
 			switch(arg) {
@@ -49,6 +50,7 @@ public class MiniLogicEvaCLIMain {
 					System.out.println("--skipProperties \t skips properties when printing.");
 					System.out.println("--skipReadableTable \t skips the readable truth table when printing.");
 					System.out.println("--skipLaTeXTable \t skips the LaTeX truth table when printing.");
+					System.out.println("--simpleTables \t only writes the end result of each row into truth tables.");
 					return;
 				case "--version":
 				case "-v":
@@ -92,7 +94,7 @@ public class MiniLogicEvaCLIMain {
 			}
 		}
 		
-		MiniLogicEvaCore.printOutput(formula, writer, skipHeaders, skipNotations, skipProperties, skipReadableTable, skipLaTeXTable);
+		MiniLogicEvaCore.printOutput(formula, writer, skipHeaders, skipNotations, skipProperties, skipReadableTable, skipLaTeXTable, simpleTables);
 		
 		writer.close();
 	}
