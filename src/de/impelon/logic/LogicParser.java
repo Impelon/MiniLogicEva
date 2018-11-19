@@ -38,7 +38,7 @@ public class LogicParser {
 	 */
 	public List<LogicSymbol> getPartialResults(String equation, boolean inordering) {
 		this.parse(equation);
-		if (inordering)
+		if (!inordering)
 			return new ArrayList<LogicSymbol>(this.partialResults.values());
 		return this.partialResults.entrySet().stream()
 				.sorted(Map.Entry.comparingByKey()).map(Map.Entry::getValue).collect(Collectors.toList());

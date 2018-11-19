@@ -14,6 +14,11 @@ public class LogicFormula {
 	protected String formula;
 	protected LogicSymbol result = null;
 	protected static LogicParser parser = new LogicParser();
+	enum MinimalForms {
+		NORMAL,
+		DNF,
+		CNF;
+	}
 	
 	public LogicFormula(String formula) {
 		this.formula = formula;
