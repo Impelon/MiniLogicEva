@@ -44,6 +44,7 @@ public class MiniLogicEvaCLIMain {
 					System.out.println("Options:");
 					System.out.println("--help, -h \t\t provides a help message.");
 					System.out.println("--version, -v \t\t prints this implementation's version.");
+					System.out.println("--checkVersion \t checks for the latest version.");
 					System.out.println("--print, -p \t\t prints any output to the standard output instead of writing to 'output.txt'.");
 					System.out.println("--skipHeaders \t\t skips headers when printing.");
 					System.out.println("--skipNotations \t skips notations when printing.");
@@ -55,6 +56,14 @@ public class MiniLogicEvaCLIMain {
 				case "--version":
 				case "-v":
 					System.out.println("MiniLogicEvaCLI - version: " + MiniLogicEvaCore.VERSION);
+					return;
+				case "--checkVersion":
+					String url = MiniLogicEvaCore.getUpdateWebsite();
+					if (url == null) {
+						System.out.println("Up to date!");
+					} else {
+						System.out.println("New version available at: " + url);
+					}
 					return;
 				case "--print":
 				case "-p":

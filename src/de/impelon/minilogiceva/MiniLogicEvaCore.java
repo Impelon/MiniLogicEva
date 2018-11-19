@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import de.impelon.logic.LogicFormula;
 import de.impelon.logic.LogicParser;
@@ -19,9 +21,54 @@ import de.impelon.logic.LogicSymbol;
 
 public class MiniLogicEvaCore {
 	
-	protected static LogicParser parser = new LogicParser();	
-	public final static String VERSION = new BufferedReader(new InputStreamReader(MiniLogicEvaCore.class.getResourceAsStream("/info.txt")))
-			.lines().filter(x -> x.startsWith("version: ")).collect(Collectors.toList()).get(0).replace("version:", "").trim();
+	protected static LogicParser parser = new LogicParser();
+	public final static String VERSION = new BufferedReader(new InputStreamReader(MiniLogicEvaCore.class.getResourceAsStream("/info.txt"))).lines()
+			.filter(x -> x.startsWith("version: ")).collect(Collectors.toList()).get(0).replace("version:", "").trim();
+	public final static String WEBSITE = new BufferedReader(new InputStreamReader(MiniLogicEvaCore.class.getResourceAsStream("/info.txt"))).lines()
+			.filter(x -> x.startsWith("website: ")).collect(Collectors.toList()).get(0).replace("website:", "").trim();
+	
+	/**
+	 * <p> Returns the remote info-file as a Stream. </p>
+	 * 
+	 * @return the Stream of the info-file; null if any exception occurred
+	 */
+	protected static Stream<String> getRemoteInfo() {
+		try {
+			return new BufferedReader(new InputStreamReader(new URL("https://raw.githubusercontent.com/Impelon/MiniLogicEva/master/src/de/impelon/info.yml").openStream(), "UTF-8")).lines();
+		} catch (Exception ex) {
+			return null;
+		}
+	}
+	
+	/**
+	 * <p> Returns the URL of the website of the updated remote version. </p>
+	 * 
+	 * @return URL of the update-website; null if the remote version is the same
+	 */
+	public static String getUpdateWebsite() {
+		if (!isRemoteVersion()) {
+			Stream<String> info = getRemoteInfo();
+			if (info == null)
+				return null;
+			
+			return info.filter(x -> x.startsWith("website: ")).collect(Collectors.toList()).get(0).replace("website:", "").trim();
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * <p> Checks whether the current version is the same as the remote version. </p>
+	 * 
+	 * @return whether the current version is the same as the remote version
+	 */
+	public static boolean isRemoteVersion() {
+		Stream<String> info = getRemoteInfo();
+		if (info == null)
+			return true;
+		
+		return info.filter(x -> x.startsWith("version: ")).collect(Collectors.toList()).get(0).replace("version:", "").trim().equals(VERSION);
+	}
 	
 	/**
 	 * <p> Prints all information about the given input to the given Writer. </p>
