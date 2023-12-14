@@ -1,0 +1,48 @@
+name: Build and Attach JAR to release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/setup-java@v4.0.0
+        with:
+          java-version: 8
+          distribution: temurin
+
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Create build directory
+        run: mkdir bin
+
+      - name: Compile java files
+        run: find src -name '*.java' | xargs javac -d bin
+
+      - name: Copy files to include
+        run: cp {info.txt,LICENSE} bin
+
+      - name: Create GUI JAR
+        # Simple, but includes unnecessary code:
+        # run: jar cfe ../MiniLogicEva.jar de.impelon.minilogiceva.MiniLogicEvaMain .
+        run: find . -not -name 'MiniLogicEvaCLIMain.class' -and -type f | xargs jar cfe "../MiniLogicEva.jar" 'de.impelon.minilogiceva.MiniLogicEvaMain'
+        working-directory: bin
+
+      - name: Create CLI JAR
+        run: find . -not -name 'MiniLogicEvaMain*.class' -and -type f | xargs jar cfe "../MiniLogicEvaCLI.jar" 'de.impelon.minilogiceva.MiniLogicEvaCLIMain'
+        working-directory: bin
+
+      - name: Upload JAR to release
+        uses: svenstaro/upload-release-action@2.7.0
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: "*.jar"
+          file_glob: true
+          tag: ${{ github.ref }}
