@@ -34,7 +34,7 @@ public class MiniLogicEvaCore {
 	 */
 	protected static Stream<String> getRemoteInfo() {
 		try {
-			return new BufferedReader(new InputStreamReader(new URL("https://raw.githubusercontent.com/Impelon/MiniLogicEva/master/src/de/impelon/info.yml").openStream(), "UTF-8")).lines();
+			return new BufferedReader(new InputStreamReader(new URL("https://raw.githubusercontent.com/Impelon/MiniLogicEva/main/info.txt").openStream(), "UTF-8")).lines();
 		} catch (Exception ex) {
 			return null;
 		}
