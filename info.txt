@@ -1,0 +1,4 @@
+author: Impelon
+version: 1.2
+website: https://github.com/Impelon/MiniLogicEva
+
