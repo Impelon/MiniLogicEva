@@ -44,14 +44,14 @@ public class MiniLogicEvaCLIMain {
 					System.out.println("Options:");
 					System.out.println("--help, -h \t\t provides a help message.");
 					System.out.println("--version, -v \t\t prints this implementation's version.");
-					System.out.println("--checkVersion \t checks for the latest version.");
+					System.out.println("--checkVersion \t\t checks for the latest version.");
 					System.out.println("--print, -p \t\t prints any output to the standard output instead of writing to 'output.txt'.");
 					System.out.println("--skipHeaders \t\t skips headers when printing.");
 					System.out.println("--skipNotations \t skips notations when printing.");
 					System.out.println("--skipProperties \t skips properties when printing.");
 					System.out.println("--skipReadableTable \t skips the readable truth table when printing.");
 					System.out.println("--skipLaTeXTable \t skips the LaTeX truth table when printing.");
-					System.out.println("--simpleTables \t only writes the end result of each row into truth tables.");
+					System.out.println("--simpleTables \t\t only writes the end result of each row into truth tables.");
 					return;
 				case "--version":
 				case "-v":
@@ -86,7 +86,7 @@ public class MiniLogicEvaCLIMain {
 					break;
 				default:
 					formula = arg;
-			}				
+			}
 		}
 		
 		if (formula == null) {
